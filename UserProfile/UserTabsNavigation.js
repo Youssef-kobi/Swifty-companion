@@ -14,6 +14,7 @@ import UserProjects from './UserProjects';
 import UserSkills from './UserSkills';
 import Icon from 'react-native-vector-icons/Entypo';
 import IconB from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 // import Profile from './UserProfile';
 
 const Tab = createBottomTabNavigator();
@@ -21,42 +22,56 @@ const UserTabsNavigation = ({ route }) => {
   const user = route.params;
   return (
     <Tab.Navigator
-      screenOptions={{
-        activeTintColor: '#2B2D42',
-        inactiveTintColor: '#8D99AE',
-        labelStyle: styles.label,
-        style: styles.tabBar,
-      }}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Info') {
+            iconName = focused
+              ? 'ios-information-circle'
+              : 'ios-information-circle-outline';
+          } else if (route.name === 'Projects') {
+            iconName = focused ? 'folder-open' : 'folder-outline';
+          } else if (route.name === 'Skills') {
+            iconName = focused ? 'code-working' : 'ios-code-outline';
+          }
+          // You can return any component that you like here!
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarLabel: () => {
+          if (route.name === 'Info') {
+            return (
+              <Text style={{ color: 'black', fontSize: 12 }}>Profile</Text>
+            );
+          } else if (route.name === 'Projects') {
+            return (
+              <Text style={{ color: 'black', fontSize: 12 }}>Projects</Text>
+            );
+          } else if (route.name === 'Skills') {
+            return <Text style={{ color: 'black', fontSize: 12 }}>Skills</Text>;
+          }
+        },
+        tabBarStyle: {
+          // backgroundColor: '#FFFFFF80',
+          height: 60,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: 'bold',
+          
+        },
+        tabBarActiveTintColor: 'blue',
+        // tabBarInactiveTintColor: 'gray',
+        headerShown: false,
+      })}
     >
       <Tab.Screen
         name='Info'
         component={UserInfo}
-        options={{
-          tabBarShowLabel: false,
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <View style={styles.iconContainer}>
-              <Icon name='info' size={28} />
-              <Text style={styles.text}>Infos</Text>
-            </View>
-          ),
-        }}
         initialParams={{ user: user }}
       />
       <Tab.Screen
         name='Projects'
-        options={{
-          // tabBarLabel: 'Info',
-          tabBarShowLabel: false,
-
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <View style={styles.iconContainer}>
-              <IconB name='work-outline' size={32} />
-              <Text style={styles.text}>Projects</Text>
-            </View>
-          ),
-        }}
         component={UserProjects}
         initialParams={{ user }}
       />
@@ -64,18 +79,6 @@ const UserTabsNavigation = ({ route }) => {
         name='Skills'
         component={UserSkills}
         initialParams={{ user }}
-        options={{
-          // tabBarLabel: 'Info',
-          tabBarShowLabel: false,
-
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <View style={styles.iconContainer}>
-              <Icon name='code' size={32} />
-              <Text style={styles.text}>Skills</Text>
-            </View>
-          ),
-        }}
       />
     </Tab.Navigator>
   );
@@ -115,6 +118,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 32,
     fontWeight: 'bold',
+    // color: 'green',
   },
 });
 

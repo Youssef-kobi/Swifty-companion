@@ -16,7 +16,6 @@ const UserSkills = ({ route }) => {
     (cu) => cu.cursus_id === 21 || cu.cursus_id === 1
     );
     const skills = cursus.skills;
-  console.log(cursus);
   const progressAnims = skills.map(() => new Animated.Value(0));
 
     useEffect(() => {
