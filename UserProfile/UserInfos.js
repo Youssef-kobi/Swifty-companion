@@ -25,7 +25,7 @@ const UserInfo = ({ route }) => {
   } = user;
   const cursus = cursus_users.find(
     (cu) => cu.cursus_id === 21 || cu.cursus_id === 1
-    );
+  );
   const date = new Date(cursus.begin_at);
   const formattedDate = `${date.getFullYear()}/${
     date.getMonth() + 1
@@ -119,6 +119,8 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginBottom: 10,
     position: 'relative',
+    // overflow: 'hidden',
+    // borderRadius: 100,
   },
   image: {
     width: 150,

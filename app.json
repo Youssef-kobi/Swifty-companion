@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Swifty-Componion",
-    "slug": "Swifty-Componion",
+    "slug": "yel-search",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3fcf3f65-d2ac-468c-8e9c-cfee92374f21"
+      }
+    },
+    "owner": "yel-kobi"
   }
 }

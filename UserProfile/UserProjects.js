@@ -16,8 +16,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const UserProjects = ({ route }) => {
   const { user } = route.params;
   const Projects = user.projects_users;
-  console.log(Projects[25]);
-  // const [expandedProjects, setExpandedProjects] = useState({});
   const [loadingProjects, setLoadingProjects] = useState({});
   const initialState = {};
 
@@ -36,10 +34,6 @@ const UserProjects = ({ route }) => {
   const [expandedProjects, dispatch] = useReducer(reducer, initialState);
 
   const handleProjectPress = async (projectId) => {
-    // setExpandedProjects({
-    //   ...expandedProjects,
-    //   [projectId]: !expandedProjects[projectId],
-    // });
     dispatch({ type: 'toggle', projectId });
     if (!expandedProjects[projectId]) {
       setLoadingProjects({ ...loadingProjects, [projectId]: true });
@@ -55,9 +49,7 @@ const UserProjects = ({ route }) => {
     return formattedDate;
   };
   const getStatusIcon = (project) => {
-    // console.log(project['validated?']);
     if (project?.status === 'in_progress') {
-      // should display a orange circle with a text "In Progress"
       return (
         <View style={styles.statusContainer}>
           <View style={styles.statusIcon}>
@@ -84,7 +76,10 @@ const UserProjects = ({ route }) => {
           <Text style={styles.statusIconText}>Grouping{` `}</Text>
         </View>
       );
-    } else if (project?.status === 'finished' && project['validated?'] === null) {
+    } else if (
+      project?.status === 'finished' &&
+      project['validated?'] === null
+    ) {
       return (
         <View style={styles.statusContainer}>
           <View style={styles.statusIcon}>
@@ -122,7 +117,6 @@ const UserProjects = ({ route }) => {
                 >
                   <Text style={styles.name}>{project.project.name}</Text>
                   {getStatusIcon(project)}
-                  {/* <Text style={styles.name}>{project.}</Text> */}
                 </TouchableOpacity>
                 {loadingProjects[project.id] ? (
                   <ActivityIndicator size='small' color='#0000ff' />
@@ -140,7 +134,6 @@ const UserProjects = ({ route }) => {
                     <Text>
                       Corrected the: {dateFormatter(project.marked_at)}
                     </Text>
-                    {/* <Text>Started At: {project.created_at}</Text> */}
                   </View>
                 )}
               </View>
@@ -155,8 +148,6 @@ const UserProjects = ({ route }) => {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    // display: 'flex',
-    // justifyContent: 'center',
     backgroundColor: 'white',
   },
   container: {
@@ -167,8 +158,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    // height: '100%',
-    // alignItems: 'center',
     backgroundColor: '#FFFFFF80',
   },
   title: {
@@ -177,7 +166,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   project: {
-    // width: '80%',
     marginVertical: 20,
     borderWidth: 1,
     borderColor: 'gray',
@@ -208,11 +196,11 @@ const styles = StyleSheet.create({
   projectDetails: {
     backgroundColor: '#F0F0F0',
     padding: 10,
-    display: 'none', // hide by default
+    display: 'none',
     borderRadius: 10,
   },
   showProjectDetails: {
-    display: 'flex', // show when expanded
+    display: 'flex',
   },
   projectDetailsText: {
     fontWeight: 'bold',
@@ -222,8 +210,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     width: '26%',
-    // justifyContent: 'flex-start',
-    // alignItems: 'center',
   },
   statusIcon: {
     marginRight: 2,

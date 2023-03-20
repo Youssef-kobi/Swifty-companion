@@ -1,33 +1,24 @@
 import { StatusBar } from 'expo-status-bar';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { AuthProvider, useAuth } from './context/AuthCtx';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Search from './Search';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import UserProfile from './UserProfile';
 import UserTabsNavigation from './UserProfile/UserTabsNavigation';
+import Login from './Login';
+import Screens from './screens';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name='Search'
-            component={Search}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name='UserTabsNavigation'
-            options={{ headerShown: false }}
-            component={UserTabsNavigation}
-          />
-        </Stack.Navigator>
+    <NavigationContainer>
+      <AuthProvider>
+        <Screens />
         <StatusBar backgroundColor='#FFFFFF70' barStyle='dark-content' />
-      </NavigationContainer>
-    </AuthProvider>
+      </AuthProvider>
+    </NavigationContainer>
   );
 };
 export default App;

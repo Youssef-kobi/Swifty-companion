@@ -11,54 +11,27 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useAuth } from './context/AuthCtx';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-
-const schema = yup.object().shape({
-  search: yup.string().required('Search is required'),
-});
-
-const Search = () => {
-  const { accessToken, signOut } = useAuth();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
-  const navigation = useNavigation();
+import * as AuthSession from 'expo-auth-session';
+import * as Random from 'expo-random';
+const authEndpoint = 'https://api.intra.42.fr/oauth/authorize';
+const clientId =
+  'u-s4t2ud-08c9457f54e95abc4d90738e35b4cba78915a04c6dd4a20dd1935c8383db2c71';
+const clientSecret =
+  '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';
+const tokenUrl = 'https://api.intra.42.fr/oauth/token';
+const scopes = ['public', 'projects', 'profile'];
+const Login = () => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const { signIn, signOut, isAuthenticated } = useAuth();
+  const navigation = useNavigation();
 
-  const onSubmit = (data) => {
-    fetchUsers(data.search);
-  };
-  // signOut();
-  const fetchUsers = async (query) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `https://api.intra.42.fr/v2/users/${query.toLowerCase()}`,
-        {
-          headers: {
-            Authorization: `${`Bearer`} ${accessToken}`,
-          },
-        }
-      );
-      setLoading(false);
-      navigation.navigate('UserTabsNavigation', response.data);
-    } catch (error) {
-      setError('search', {
-        type: 'string',
-        message: 'User not found',
-      });
-      setLoading(false);
-    }
-  };
+  // Check if the user is authenticated and redirect to the appropriate screen
+  if (isAuthenticated) {
+    navigation.navigate('Login');
+  }
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -70,36 +43,11 @@ const Search = () => {
         <View style={styles.container}>
           <View style={styles.inputContainer}>
             <Text style={styles.inputText}>Yel-Search</Text>
-            <Text style={styles.inputTextSmall}>
-              Please type a 42 user login{' '}
-            </Text>
-            <Controller
-              name='search'
-              control={control}
-              defaultValue=''
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={styles.input}
-                  placeholder='Search'
-                  placeholderTextColor='#c0c0c0'
-                  onBlur={onBlur}
-                  onChangeText={(value) => {
-                    onChange(value);
-                  }}
-                  value={value}
-                />
-              )}
-            />
-            {errors?.search && (
-              <Text style={styles.error}>{errors.search.message}</Text>
-            )}
+            <Text style={styles.inputTextSmall}>Please Login </Text>
+            <TouchableOpacity style={styles.button} onPress={() => signIn()}>
+              <Text style={styles.buttonText}>Login using intra 42</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleSubmit(onSubmit)}
-          >
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
         </View>
         {loading && (
           <View style={styles.loadingContainer}>
@@ -110,16 +58,13 @@ const Search = () => {
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
   },
   backgroundImage: {
     flex: 1,
-    // resizeMode: 'repeat',
-    // width: '100%',
-    // height: '100px',
+
     justifyContent: 'center',
   },
   container: {
@@ -158,15 +103,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
   },
-  input: {
-    width: '100%',
-    backgroundColor: '#FFFFFF80',
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    fontSize: 18,
-    color: '#000000',
-  },
   button: {
     backgroundColor: '#2B2D42',
     width: '100%',
@@ -199,5 +135,4 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });
-
-export default Search;
+export default Login;

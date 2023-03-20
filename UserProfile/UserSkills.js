@@ -69,8 +69,8 @@ const UserSkills = ({ route }) => {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
+    // display: 'flex',
+    // justifyContent: 'center',
     backgroundColor: 'white',
   },
   container: {
