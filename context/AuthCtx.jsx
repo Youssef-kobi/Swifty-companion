@@ -57,7 +57,8 @@ export const AuthProvider = ({ children }) => {
       }
     };
     checkAccessToken();
-  }, [accessToken, refreshToken]);
+  }, []);
+  
   const getRefreshedTokens = async (refToken) => {
     try {
       const body = {
@@ -78,7 +79,6 @@ export const AuthProvider = ({ children }) => {
         JSON.stringify(Date.now() + response.data.expires_in)
       );
     } catch (error) {
-      console.log(error);
       throw new Error(error);
     }
   };
@@ -88,7 +88,6 @@ export const AuthProvider = ({ children }) => {
         bytes.map((b) => b.toString(16).padStart(2, '0')).join('')
       );
       const redirectUri = AuthSession.getRedirectUrl();
-      console.log(redirectUri);
       const scopes = ['public', 'projects', 'profile'];
       const authUrl = `${authEndpoint}?client_id=${clientId}&redirect_uri=${encodeURIComponent(
         redirectUri
@@ -116,7 +115,6 @@ export const AuthProvider = ({ children }) => {
       const { access_token, refresh_token, expires_in } = response.data;
       setAccessToken(access_token);
       setRefreshToken(refresh_token);
-      console.log(Date.now() + expires_in);
       setExpiresAt(Date.now() + expires_in);
       await AsyncStorage.setItem('accessToken', response.data.access_token);
       await AsyncStorage.setItem('refreshToken', response.data.refresh_token);
@@ -125,7 +123,6 @@ export const AuthProvider = ({ children }) => {
         JSON.stringify(Date.now() + response.data.expires_in)
       );
     } catch (error) {
-      console.log(error);
       throw new Error(error);
     }
   };
