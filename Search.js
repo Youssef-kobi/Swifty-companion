@@ -22,7 +22,7 @@ const schema = yup.object().shape({
 });
 
 const Search = () => {
-  const { accessToken, signOut } = useAuth();
+  const { accessToken, signOut, setLoading,loading } = useAuth();
   const {
     control,
     handleSubmit,
@@ -32,7 +32,6 @@ const Search = () => {
     resolver: yupResolver(schema),
   });
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
 
   const onSubmit = (data) => {
     fetchUsers(data.search);

@@ -24,7 +24,7 @@ const UserInfo = ({ route }) => {
     staff: isStaff = false,
   } = user;
   const cursus = cursus_users.find(
-    (cu) => cu.cursus_id === 21 || cu.cursus_id === 1
+    (cu) => cu.cursus_id === 21 ?? cu.cursus_id === 6 ?? cu.cursus_id === 1
   );
   const date = new Date(cursus.begin_at);
   const formattedDate = `${date.getFullYear()}/${

@@ -92,9 +92,9 @@ const UserProjects = ({ route }) => {
       return (
         <View style={[styles.statusContainer, styles.pendingStatusIcon]}>
           <View style={styles.statusIcon}>
-            <Icon name='circle' size={14} color='red' />
+            <Icon name='circle' size={14} color='orange' />
           </View>
-          <Text style={styles.statusIconText}>Failed {` `}</Text>
+          <Text style={styles.statusIconText}>in Progress {` `}</Text>
         </View>
       );
     }
@@ -130,9 +130,15 @@ const UserProjects = ({ route }) => {
                     <Text style={styles.projectDetailsText}>
                       Project Details:
                     </Text>
-                    <Text>Final Mark: {project.final_mark}</Text>
                     <Text>
-                      Corrected the: {dateFormatter(project.marked_at)}
+                      Final Mark:{' '}
+                      {project.final_mark ? project.final_mark : '-'}
+                    </Text>
+                    <Text>
+                      Corrected:{' '}
+                      {project.marked_at
+                        ? dateFormatter(project.marked_at)
+                        : 'Not yet'}
                     </Text>
                   </View>
                 )}

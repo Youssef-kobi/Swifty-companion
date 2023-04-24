@@ -14,7 +14,6 @@ import { useAuth } from './context/AuthCtx';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import * as AuthSession from 'expo-auth-session';
-import * as Random from 'expo-random';
 const authEndpoint = 'https://api.intra.42.fr/oauth/authorize';
 const clientId =
   'u-s4t2ud-08c9457f54e95abc4d90738e35b4cba78915a04c6dd4a20dd1935c8383db2c71';
@@ -23,9 +22,9 @@ const clientSecret =
 const tokenUrl = 'https://api.intra.42.fr/oauth/token';
 const scopes = ['public', 'projects', 'profile'];
 const Login = () => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { signIn, signOut, isAuthenticated } = useAuth();
+  const { signIn, signOut, isAuthenticated, loading, setLoading } = useAuth();
   const navigation = useNavigation();
 
   // Check if the user is authenticated and redirect to the appropriate screen

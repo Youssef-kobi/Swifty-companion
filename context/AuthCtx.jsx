@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as AuthSession from 'expo-auth-session';
-import * as Random from 'expo-random';
+import * as Random from 'expo-crypto';
 import axios from 'axios';
 import {
   AUTH_ENDPOINT,
@@ -11,17 +11,15 @@ import {
   TOKEN_URL,
   SCOPES,
 } from '@env';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-const authEndpoint = AUTH_ENDPOINT;
-const clientId = CLIENT_ID;
-const clientSecret = CLIENT_SECRET;
-const tokenUrl = TOKEN_URL;
 const scopes = SCOPES.split(',');
 
 export const AuthContext = createContext({
   accessToken: null,
   refreshToken: null,
   isAuthenticated: null,
+  loading: false,
   signIn: () => {},
   signOut: () => {},
 });
@@ -30,6 +28,8 @@ export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
   const [expiresAt, setExpiresAt] = useState(null);
+  
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Retrieve the tokens from async storage when the component mounts
@@ -58,16 +58,16 @@ export const AuthProvider = ({ children }) => {
     };
     checkAccessToken();
   }, []);
-  
+
   const getRefreshedTokens = async (refToken) => {
     try {
       const body = {
-        client_id: clientId,
-        client_secret: clientSecret,
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
         grant_type: 'refresh_token',
         refresh_token: refToken,
       };
-      const response = await axios.post(tokenUrl, body);
+      const response = await axios.post(TOKEN_URL, body);
       const { access_token, refresh_token } = response.data;
       setAccessToken(access_token);
       setRefreshToken(refresh_token);
@@ -89,9 +89,9 @@ export const AuthProvider = ({ children }) => {
       );
       const redirectUri = AuthSession.getRedirectUrl();
       const scopes = ['public', 'projects', 'profile'];
-      const authUrl = `${authEndpoint}?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+      const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(
         redirectUri
-      )}&response_type=code&scope=${scopes.join('%20')}&state=${state}`;
+      )}&response_type=code&scope=${SCOPES}&state=${state}`;
 
       const result = await AuthSession.startAsync({ authUrl });
 
@@ -105,13 +105,13 @@ export const AuthProvider = ({ children }) => {
       }
 
       const tokenRequestBody = {
-        client_id: clientId,
-        client_secret: clientSecret,
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
         code: params.code,
         grant_type: 'authorization_code',
         redirect_uri: redirectUri,
       };
-      const response = await axios.post(tokenUrl, tokenRequestBody);
+      const response = await axios.post(TOKEN_URL, tokenRequestBody);
       const { access_token, refresh_token, expires_in } = response.data;
       setAccessToken(access_token);
       setRefreshToken(refresh_token);
@@ -143,11 +143,30 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!accessToken,
     signIn,
     signOut,
+    loading,
+    setLoading
   };
   return (
     <AuthContext.Provider value={contextValues}>
+      {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size='large' color='#FFFFFF' />
+        </View>
+      )}
       {children}
     </AuthContext.Provider>
   );
 };
+const styles = StyleSheet.create({
+  loadingContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+});
 export const useAuth = () => useContext(AuthContext);

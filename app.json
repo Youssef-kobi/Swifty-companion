@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "Swifty-Componion",
+    "scheme": "https",
     "slug": "yel-search",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -21,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yelkobi.yelsearch"
     },
     "web": {
       "favicon": "./assets/favicon.png"
